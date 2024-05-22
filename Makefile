@@ -1,8 +1,8 @@
-TARGET := binary_tree
-SRC := binary_tree.c
+SRC := binary_tree.c link_list.c
 
 all:
-	gcc binary_tree.c -o ${TARGET} -g
-
+	gcc binary_tree.c -o binary_tree -g
+	gcc link_list.c -o link_list -g
 clean:
-	rm -f ${TARGET}
+	rm -f binary_tree
+	rm -f link_list
