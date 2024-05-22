@@ -72,6 +72,62 @@ struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
     return result;
 }
 
+struct ListNode* reverseList(struct ListNode* head) 
+{
+    struct ListNode* cur = NULL, *next = NULL, *pre = NULL;
+
+    if(!head || (!head->next)) {
+        return head;
+    }
+
+    cur = head->next;
+    pre = head;
+
+    while(cur) {
+        next = cur->next;
+        pre->next = NULL;
+        cur->next = head;
+        head = cur;
+        cur = next;
+    }
+
+    return head;
+}
+
+struct ListNode* sortList(struct ListNode* head) 
+{
+    struct ListNode* cur = NULL, *next = NULL, *tmp = NULL;
+    struct ListNode* inner_pre = NULL, *inner_tail = NULL;
+
+    if(!head || (!head->next)) {
+        return head;
+    }
+
+    struct ListNode* dummy_head = (struct ListNode*)malloc(sizeof(struct ListNode));
+    dummy_head->next = head;
+    cur = head->next;
+    inner_tail = head;
+    while(cur) {
+        next = cur->next;
+        inner_tail->next = NULL; // break connectin
+        for(tmp = dummy_head->next, inner_pre = dummy_head; tmp; tmp = tmp->next, inner_pre = inner_pre->next) {
+            if (tmp->val >= cur->val) { // find a value > cur->val
+                tmp->next = cur;
+                break;
+            } else if (tmp == inner_tail) { //no value is over cur->val
+                tmp->next = cur;
+                inner_tail = cur; //update inner_tail
+                break;
+            }
+        }
+        cur = next;
+    }
+
+    return dummy_head->next;
+
+}
+
+
 static void dump_link_list(struct ListNode* list)
 {
     while(list) {
@@ -99,16 +155,29 @@ static struct ListNode* create_link_list(int* data, int size)
 
 int main()
 {
-    int array_1[] = {1, 2 ,4};
+    int array_1[] = {1, 2 ,4, 5, 7, 11, 18};
     int array_2[] = {1, 3, 4};
+
+    int array_3[] = {7, 9, 5};
 
     struct ListNode* list1 = create_link_list(array_1, sizeof(array_1)/sizeof(int));
     struct ListNode* list2 = create_link_list(array_2, sizeof(array_2)/sizeof(int));
+    struct ListNode* list3 = create_link_list(array_3, sizeof(array_3)/sizeof(int));
 
     dump_link_list(list1);
     dump_link_list(list2);
 
     struct ListNode* result = mergeTwoLists(list1, list2);
     dump_link_list(result);
+
+    struct ListNode* reverseList1 = reverseList(list1);
+    dump_link_list(reverseList1);
+
+    printf("original list3 \r\n");
+    dump_link_list(list3);
+    list3 = sortList(list3);
+    printf("list3 after sorting \r\n");
+    dump_link_list(list3);
+
     
 }
