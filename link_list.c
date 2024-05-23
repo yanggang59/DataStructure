@@ -110,9 +110,11 @@ struct ListNode* sortList(struct ListNode* head)
     while(cur) {
         next = cur->next;
         inner_tail->next = NULL; // break connectin
+        cur->next = NULL;
         for(tmp = dummy_head->next, inner_pre = dummy_head; tmp; tmp = tmp->next, inner_pre = inner_pre->next) {
             if (tmp->val >= cur->val) { // find a value > cur->val
-                tmp->next = cur;
+                cur->next = tmp;
+                inner_pre->next = cur;
                 break;
             } else if (tmp == inner_tail) { //no value is over cur->val
                 tmp->next = cur;
@@ -158,7 +160,7 @@ int main()
     int array_1[] = {1, 2 ,4, 5, 7, 11, 18};
     int array_2[] = {1, 3, 4};
 
-    int array_3[] = {7, 9, 5};
+    int array_3[] = {8,5,7,3,4,9,1};
 
     struct ListNode* list1 = create_link_list(array_1, sizeof(array_1)/sizeof(int));
     struct ListNode* list2 = create_link_list(array_2, sizeof(array_2)/sizeof(int));
