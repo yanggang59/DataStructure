@@ -15,7 +15,7 @@ static struct ListNode* create_node(int val)
     return tmp;
 }
 
-struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
+struct ListNode* merge_lists(struct ListNode* list1, struct ListNode* list2) {
     struct ListNode* result = NULL, *tail = NULL, *cur_l1 = NULL, *cur_l2 = NULL, *tmp = NULL;
     if(!list1)
         return list2;
@@ -96,7 +96,6 @@ struct ListNode* reverseList(struct ListNode* head)
 
 struct ListNode* select_sort_list(struct ListNode* head) 
 {
-    //Insert Sort Algorithm
     struct ListNode* cur = NULL, *next = NULL, *tmp = NULL;
     struct ListNode* inner_pre = NULL, *inner_tail = NULL;
 
@@ -207,7 +206,7 @@ int main()
     dump_link_list(list1);
     dump_link_list(list2);
 
-    struct ListNode* result = mergeTwoLists(list1, list2);
+    struct ListNode* result = merge_lists(list1, list2);
     dump_link_list(result);
 
     struct ListNode* reverseList1 = reverseList(list1);
