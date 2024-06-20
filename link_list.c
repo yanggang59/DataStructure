@@ -94,8 +94,46 @@ struct ListNode* reverseList(struct ListNode* head)
     return head;
 }
 
-struct ListNode* sortList(struct ListNode* head) 
+struct ListNode* select_sort_list(struct ListNode* head) 
 {
+    //Insert Sort Algorithm
+    struct ListNode* cur = NULL, *next = NULL, *tmp = NULL;
+    struct ListNode* inner_pre = NULL, *inner_tail = NULL;
+
+    if(!head || (!head->next)) {
+        return head;
+    }
+
+    struct ListNode* dummy_head = (struct ListNode*)malloc(sizeof(struct ListNode));
+    dummy_head->next = head;
+    cur = head->next;
+    inner_tail = head;
+    while(cur) {
+        next = cur->next;
+        inner_tail->next = NULL; // break connectin
+        cur->next = NULL;
+        for(tmp = dummy_head->next, inner_pre = dummy_head; tmp; tmp = tmp->next, inner_pre = inner_pre->next) {
+            if (tmp->val >= cur->val) { // find a value > cur->val
+                cur->next = tmp;
+                inner_pre->next = cur;
+                break;
+            } else if (tmp == inner_tail) { //no value is over cur->val
+                tmp->next = cur;
+                inner_tail = cur; //update inner_tail
+                break;
+            }
+        }
+        cur = next;
+    }
+
+    return dummy_head->next;
+
+}
+
+
+struct ListNode* insert_sort_list(struct ListNode* head) 
+{
+    //Insert Sort Algorithm
     struct ListNode* cur = NULL, *next = NULL, *tmp = NULL;
     struct ListNode* inner_pre = NULL, *inner_tail = NULL;
 
@@ -177,7 +215,7 @@ int main()
 
     printf("original list3 \r\n");
     dump_link_list(list3);
-    list3 = sortList(list3);
+    list3 = insert_sort_list(list3);
     printf("list3 after sorting \r\n");
     dump_link_list(list3);
 
