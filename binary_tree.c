@@ -52,6 +52,49 @@ Node* top(Stack* stack)
     return NULL;
 }
 
+
+typedef struct queue_node{
+    Node* node;
+    struct queue_node* next;
+}QueueNode;
+
+typedef struct queue {
+    QueueNode* head;
+    QueueNode* tail;
+} Queue;
+
+
+void init_queue(Queue* queue)
+{
+    if(!queue) return;
+    queue->head = queue->tail = NULL;
+}
+
+void enqueue(Queue* queue, Node* node)
+{
+    if(!queue || !node) return;
+    QueueNode* new_node = (QueueNode*)malloc(sizeof(QueueNode));
+    new_node->node = node;
+    if(!queue->head) {
+        queue->head = queue->tail = new_node;
+    } else {
+        queue->tail->next = new_node;
+        queue->tail = new_node;
+    }
+}
+
+Node* dequeue(Queue* queue)
+{
+    if(!queue) return NULL;
+    if(!queue->head) return NULL;
+    Node* node_tmp = NULL;
+    QueueNode* q_tmp = queue->head;
+    queue->head = q_tmp->next;
+    node_tmp  = q_tmp->node;
+    free(q_tmp);
+    return node_tmp;
+}
+
 Node* create_node(int data)
 {
     Node* node = malloc(sizeof(Node));
@@ -178,6 +221,27 @@ void postorder_nonrecursive(Node* root)
     }
 }
 
+void level_order_nonrecursive(Node* root)
+{
+    if(!root) return;
+    Queue queue;
+    init_queue(&queue);
+
+    enqueue(&queue, root);
+    while (queue.head != NULL) {
+        Node *node = dequeue(&queue);
+        visit(node);
+ 
+        if (node->left) {
+            enqueue(&queue, node->left);
+        }
+ 
+        if (node->right) {
+            enqueue(&queue, node->right);
+        }
+    }
+
+}
 
 int main()
 {
@@ -229,5 +293,9 @@ int main()
 
     printf("postorder nonrecursive\r\n");
     postorder_nonrecursive(root);
+    printf("\r\n");
+
+    printf("levelorder nonrecursive\r\n");
+    level_order_nonrecursive(root);
     printf("\r\n");
 }   
