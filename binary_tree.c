@@ -167,6 +167,7 @@ void preorder_nonrecursive(Node* root)
             p_tmp = p_tmp->right;
         }
     }
+    printf("\r\n");
     return;
 }
 
@@ -192,6 +193,8 @@ void inorder_nonrecursive(Node* root)
             p_tmp = p_tmp->right;
         }
     }
+
+    printf("\r\n");
 }
 
 void postorder_nonrecursive(Node* root)
@@ -219,6 +222,8 @@ void postorder_nonrecursive(Node* root)
             }
         }
     }
+
+    printf("\r\n");
 }
 
 void level_order_nonrecursive(Node* root)
@@ -241,6 +246,7 @@ void level_order_nonrecursive(Node* root)
         }
     }
 
+    printf("\r\n");
 }
 
 int main()
@@ -285,17 +291,14 @@ int main()
     printf("********************** Non Recursive Traverse **********************\r\n");
     printf("preorder nonrecursive\r\n");
     preorder_nonrecursive(root);
-    printf("\r\n");
 
     printf("inorder nonrecursive\r\n");
     inorder_nonrecursive(root);
-    printf("\r\n");
 
     printf("postorder nonrecursive\r\n");
     postorder_nonrecursive(root);
-    printf("\r\n");
+
 
     printf("levelorder nonrecursive\r\n");
     level_order_nonrecursive(root);
-    printf("\r\n");
 }   
