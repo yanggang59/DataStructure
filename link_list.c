@@ -2,43 +2,32 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-struct ListNode {
+struct linked_list {
     int val;
-    struct ListNode *next;
+    struct linked_list *next;
  };
 
-static struct ListNode* create_node(int val)
+static struct linked_list* create_node(int val)
 {
-    struct ListNode* tmp = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct linked_list* tmp = (struct linked_list*)malloc(sizeof(struct linked_list));
     tmp->val = val;
     tmp->next = NULL;
     return tmp;
 }
 
-struct ListNode* merge_sorted_list(struct ListNode* list1, struct ListNode* list2)
+struct linked_list* merge_sorted_list(struct linked_list* list1, struct linked_list* list2)
 {
-    struct ListNode *head = NULL, *tail = NULL;
+    struct linked_list *head = NULL, *tail = NULL;
+    struct linked_list dummy;
+
+    tail = &dummy;
+    dummy.next = NULL;
 
     if(!list1)
         return list2;
 
     if(!list2)
         return list1;
-
-    if (list1 && list2) {
-        if (list1->val < list2->val) {
-            head = tail = create_node(list1->val);
-            list1 = list1->next;
-        } else if (list1->val > list2->val) {
-            head = tail = create_node(list2->val);
-            list2 = list2->next;
-        } else {
-            head = create_node(list1->val);
-            tail = head->next = create_node(list2->val);
-            list1 = list1->next;
-            list2 = list2->next;
-        }
-    }
 
     while(list1 && list2) {
         if(list1->val < list2->val) {
@@ -49,7 +38,7 @@ struct ListNode* merge_sorted_list(struct ListNode* list1, struct ListNode* list
             list2 = list2->next;
         } else {
             tail = tail->next = create_node(list1->val);
-            tail = tail->next = create_node(list2->val);
+            //tail = tail->next = create_node(list2->val);
             list1 = list1->next;
             list2 = list2->next;
         }
@@ -65,12 +54,12 @@ struct ListNode* merge_sorted_list(struct ListNode* list1, struct ListNode* list
         list2 = list2->next;
     }
 
-    return head;
+    return dummy.next;
 }
 
-struct ListNode* reverse_list(struct ListNode* head) 
+struct linked_list* reverse_list(struct linked_list* head) 
 {
-    struct ListNode* cur = NULL, *next = NULL, *pre = NULL;
+    struct linked_list* cur = NULL, *next = NULL, *pre = NULL;
 
     if(!head || (!head->next)) {
         return head;
@@ -90,16 +79,16 @@ struct ListNode* reverse_list(struct ListNode* head)
     return head;
 }
 
-struct ListNode* select_sort_list(struct ListNode* head) 
+struct linked_list* select_sort_list(struct linked_list* head) 
 {
-    struct ListNode* cur = NULL, *next = NULL, *tmp = NULL;
-    struct ListNode* inner_pre = NULL, *inner_tail = NULL;
+    struct linked_list* cur = NULL, *next = NULL, *tmp = NULL;
+    struct linked_list* inner_pre = NULL, *inner_tail = NULL;
 
     if(!head || (!head->next)) {
         return head;
     }
 
-    struct ListNode* dummy_head = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct linked_list* dummy_head = (struct linked_list*)malloc(sizeof(struct linked_list));
     dummy_head->next = head;
     cur = head->next;
     inner_tail = head;
@@ -126,17 +115,17 @@ struct ListNode* select_sort_list(struct ListNode* head)
 }
 
 
-struct ListNode* insert_sort_list(struct ListNode* head) 
+struct linked_list* insert_sort_list(struct linked_list* head) 
 {
     //Insert Sort Algorithm
-    struct ListNode* cur = NULL, *next = NULL, *tmp = NULL;
-    struct ListNode* inner_pre = NULL, *inner_tail = NULL;
+    struct linked_list* cur = NULL, *next = NULL, *tmp = NULL;
+    struct linked_list* inner_pre = NULL, *inner_tail = NULL;
 
     if(!head || (!head->next)) {
         return head;
     }
 
-    struct ListNode* dummy_head = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct linked_list* dummy_head = (struct linked_list*)malloc(sizeof(struct linked_list));
     dummy_head->next = head;
     cur = head->next;
     inner_tail = head;
@@ -163,7 +152,7 @@ struct ListNode* insert_sort_list(struct ListNode* head)
 }
 
 
-static void dump_link_list(struct ListNode* list)
+static void dump_linked_list(struct linked_list* list)
 {
     while(list) {
         printf("%d ", list->val);
@@ -172,12 +161,12 @@ static void dump_link_list(struct ListNode* list)
     printf("\r\n");
 }
 
-static struct ListNode* create_link_list(int* data, int size)
+static struct linked_list* create_linked_list(int* data, int size)
 {
     int i;
-    struct ListNode* head = NULL, *tail = NULL;
+    struct linked_list* head = NULL, *tail = NULL;
     for(i = 0; i < size; i++) {
-        struct ListNode* tmp = create_node(data[i]);
+        struct linked_list* tmp = create_node(data[i]);
         if (!head) {
             head = tail = tmp;
         } else {
@@ -188,9 +177,9 @@ static struct ListNode* create_link_list(int* data, int size)
     return head;
 }
 
-static void destroy_link_list(struct ListNode* head)
+static void destroy_linked_list(struct linked_list* head)
 {
-    struct ListNode *tmp = NULL;
+    struct linked_list *tmp = NULL;
     while(head) {
         tmp = head->next;
         free(head);
@@ -205,27 +194,27 @@ int main()
 
     int array_3[] = {8,5,7,3,4,9,1};
 
-    struct ListNode* list1 = create_link_list(array_1, sizeof(array_1)/sizeof(int));
-    struct ListNode* list2 = create_link_list(array_2, sizeof(array_2)/sizeof(int));
-    struct ListNode* list3 = create_link_list(array_3, sizeof(array_3)/sizeof(int));
+    struct linked_list* list1 = create_linked_list(array_1, sizeof(array_1)/sizeof(int));
+    struct linked_list* list2 = create_linked_list(array_2, sizeof(array_2)/sizeof(int));
+    struct linked_list* list3 = create_linked_list(array_3, sizeof(array_3)/sizeof(int));
 
-    dump_link_list(list1);
-    dump_link_list(list2);
+    dump_linked_list(list1);
+    dump_linked_list(list2);
 
-    struct ListNode* result = merge_sorted_list(list1, list2);
-    dump_link_list(result);
+    struct linked_list* result = merge_sorted_list(list1, list2);
+    dump_linked_list(result);
 
-    struct ListNode* reverse_list1 = reverse_list(list1);
-    dump_link_list(reverse_list1);
+    struct linked_list* reverse_list1 = reverse_list(list1);
+    dump_linked_list(reverse_list1);
 
     printf("original list3 \r\n");
-    dump_link_list(list3);
+    dump_linked_list(list3);
     list3 = insert_sort_list(list3);
     printf("list3 after sorting \r\n");
-    dump_link_list(list3);
+    dump_linked_list(list3);
 
-    destroy_link_list(list1);
-    destroy_link_list(list2);
-    destroy_link_list(list3);
-    destroy_link_list(result);
+    destroy_linked_list(list1);
+    destroy_linked_list(list2);
+    destroy_linked_list(list3);
+    destroy_linked_list(result);
 }
