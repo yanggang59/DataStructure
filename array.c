@@ -13,7 +13,7 @@ int dump_array(int* array, int size)
     printf("\r\n");
 }
 
-int* bubble_sort_array(int* array, int size)
+void bubble_sort_array(int* array, int size)
 {
 
     int pos;
@@ -21,7 +21,7 @@ int* bubble_sort_array(int* array, int size)
     int i, j;
 
     if(size <= 1) {
-        return array;
+        return;
     }
 
     for(i = 0; i < size ; i++) {
@@ -33,8 +33,36 @@ int* bubble_sort_array(int* array, int size)
             }
         }
     }
+}
 
-    return array;
+static int partition(int* array, int left, int right)
+{
+    int pivot = array[left];
+    while (right > left) {
+        while ((right > left) && (array[right] >= pivot)) right--;
+            array[left] = array[right];
+        while ((right > left) && (array[left] <= pivot)) left++;
+            array[right] = array[left];
+    }
+    array[left] = pivot;
+    return left;
+}
+
+static void __quick_sort(int* array, int left, int right)
+{
+    int pos;
+    if (right > left) {
+        pos = partition(array, left, right);
+        __quick_sort(array, left, pos - 1);
+        __quick_sort(array, pos + 1, right);
+    }
+}
+
+void quick_sort(int* array, int size)
+{
+    if (size > 1) {
+        __quick_sort(array, 0, size - 1);
+    }
 }
 
 int* reverse_array(int* array, int size)
@@ -70,45 +98,36 @@ int* gen_random_array(int size)
     return array;
 }
 
-int* merge_arrays(int* arr0, int size0, int* arr1, int size1)
+int* merge_sorted_arrays(int* arr0, int size0, int* arr1, int size1)
 {
     int pos0 = 0, pos1 = 0, pos = 0;
-    if(!size0) {
+    int* result;
+
+    if (!size0) {
         return arr1;
     }
 
-    if(!size1) {
+    if (!size1) {
         return arr0;
     }
 
-    int* result = malloc(sizeof(int) * (size0 + size1));
-    while( (pos0 < size0) && (pos1 < size1)) {
-        if(arr0[pos0] < arr1[pos1]) {
-            result[pos] = arr0[pos0];
-            pos0++;
-            pos++;
-        } else if (arr0[pos0] > arr1[pos1]) {
-            result[pos] = arr1[pos1];
-            pos1++;
-            pos++;
-        } else {
-            result[pos] = arr0[pos0];
-            pos0++;
-            pos++;
-            result[pos] = arr0[pos1];
-            pos1++;
-            pos++;
+    result = malloc(sizeof(int) * (size0 + size1));
+
+    while ( (pos0 < size0) && (pos1 < size1)) {
+        if (arr0[pos0] < arr1[pos1])
+            result[pos++] = arr0[pos0++];
+        else if (arr0[pos0] > arr1[pos1])
+            result[pos++] = arr1[pos1++];
+        else {
+            result[pos++] = arr0[pos0++];
+            result[pos++] = arr0[pos1++];
         }
     }
     while(pos0 < size0) {
-        result[pos] = arr1[pos0];
-        pos++;
-        pos0++;
+        result[pos++] = arr1[pos0++];
     }
     while(pos1 < size1) {
-        result[pos] = arr1[pos1];
-        pos++;
-        pos1++;
+        result[pos++] = arr1[pos1++];
     }
     return result;
 }
@@ -117,35 +136,59 @@ int* merge_arrays(int* arr0, int size0, int* arr1, int size1)
 
 int main()
 {
-    int size = 6;
-    int* array_0 = create_array(size, 3, 4);
-    int* array_1 = create_array(size, 5, 2);
+    int size = 20;
+    int* array_0, *array_1, *array_2, *array_3, *array_4;
+    int* merged;
+    
+    array_0 = gen_random_array(size);
+    array_1 = gen_random_array(size);
 
-    printf("[Info] merge array \r\n");
+    printf("[Info] array_0 : ");
     dump_array(array_0, size);
+    printf("[Info] array_1 : ");
     dump_array(array_1, size);
 
-    int* merged = merge_arrays(array_0, size, array_1, size);
+    bubble_sort_array(array_0, size);
+    bubble_sort_array(array_1, size);
+
+    printf("[Info] array_0 after sorting : ");
+    dump_array(array_0, size);
+    printf("[Info] array_1 after sorting : ");
+    dump_array(array_1, size);
+
+    merged = merge_sorted_arrays(array_0, size, array_1, size);
+    printf("[Info] merged array_0 and array_1 : ");
     dump_array(merged, size + size);
 
 
-    printf("[Info] reverse array \r\n");
-    int* array_2 = create_array(size, 1, 1);
+    printf("[Info] array_2 : ");
+    array_2 = create_array(size, 1, 1);
     dump_array(array_2, size);
     array_2 = reverse_array(array_2, size);
+    printf("[Info] reverse array : ");
     dump_array(array_2, size);
 
-
-    printf("[Info] sort array \r\n");
     size = 10;
-    int* array_3 = gen_random_array(size);
+    array_3 = gen_random_array(size);
+    printf("[Info] array_3 : ");
     dump_array(array_3, size);
-    array_3 = bubble_sort_array(array_3, size);
+    bubble_sort_array(array_3, size);
+    printf("[Info] bubble sort array_3 : ");
     dump_array(array_3, size);
+
+    size = 40;
+    array_4 = gen_random_array(size);
+    printf("[Info] array_4 : ");
+    dump_array(array_4, size);
+    quick_sort(array_4, size);
+    printf("[Info] quick sort array_4 : ");
+    dump_array(array_4, size);
+
 
     free(array_0);
     free(array_1);
-    if(!size)
-        free(merged);
     free(array_2);
+    free(array_3);
+    free(array_4);
+    free(merged);
 }
