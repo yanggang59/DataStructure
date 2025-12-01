@@ -15,64 +15,60 @@ static struct ListNode* create_node(int val)
     return tmp;
 }
 
-struct ListNode* merge_lists(struct ListNode* list1, struct ListNode* list2) {
-    struct ListNode* result = NULL, *tail = NULL, *cur_l1 = NULL, *cur_l2 = NULL, *tmp = NULL;
+struct ListNode* merge_sorted_list(struct ListNode* list1, struct ListNode* list2)
+{
+    struct ListNode *head = NULL, *tail = NULL;
+
     if(!list1)
         return list2;
+
     if(!list2)
         return list1;
-    cur_l1 = list1;
-    cur_l2 = list2;
-    while(cur_l1 && cur_l2) {
-        if(cur_l1->val < cur_l2->val) {
-            tmp = create_node(cur_l1->val);
-            if(!result) {
-                result = tail = tmp;
-            } else {
-                tail->next = tmp;
-                tail = tmp;
-            }
-            cur_l1 = cur_l1->next;
-        } else if (cur_l1->val > cur_l2->val) {
-            tmp = create_node(cur_l2->val);
-            if(!result) {
-                result = tail = tmp;
-            } else {
-                tail->next = tmp;
-                tail = tmp;
-            }
-            cur_l2 = cur_l2->next;
+
+    if (list1 && list2) {
+        if (list1->val < list2->val) {
+            head = tail = create_node(list1->val);
+            list1 = list1->next;
+        } else if (list1->val > list2->val) {
+            head = tail = create_node(list2->val);
+            list2 = list2->next;
         } else {
-            tmp = create_node(cur_l1->val);
-            tmp->next = create_node(cur_l1->val);
-            tmp->val = cur_l1->val;
-            tmp->next->val = cur_l2->val;
-            if(!result) {
-                result = tmp;
-                tail = tmp->next;
-            } else {
-                tail->next = tmp;
-                tail = tmp->next;
-            }
-            cur_l1 = cur_l1->next;
-            cur_l2 = cur_l2->next;
+            head = create_node(list1->val);
+            tail = head->next = create_node(list2->val);
+            list1 = list1->next;
+            list2 = list2->next;
         }
     }
 
-    while(cur_l1) {
-        tail->next = cur_l1;
-        cur_l1 = cur_l1->next;
+    while(list1 && list2) {
+        if(list1->val < list2->val) {
+            tail = tail->next = create_node(list1->val);
+            list1 = list1->next;
+        } else if (list1->val > list2->val) {
+            tail = tail->next = create_node(list2->val);
+            list2 = list2->next;
+        } else {
+            tail = tail->next = create_node(list1->val);
+            tail = tail->next = create_node(list2->val);
+            list1 = list1->next;
+            list2 = list2->next;
+        }
     }
 
-    while(cur_l2) {
-        tail->next = cur_l2;
-        cur_l2 = cur_l2->next;
+    while(list1) {
+        tail = tail->next = create_node(list1->val);
+        list1 = list1->next;
     }
 
-    return result;
+    while(list2) {
+        tail = tail->next = create_node(list2->val);
+        list2 = list2->next;
+    }
+
+    return head;
 }
 
-struct ListNode* reverseList(struct ListNode* head) 
+struct ListNode* reverse_list(struct ListNode* head) 
 {
     struct ListNode* cur = NULL, *next = NULL, *pre = NULL;
 
@@ -192,6 +188,16 @@ static struct ListNode* create_link_list(int* data, int size)
     return head;
 }
 
+static void destroy_link_list(struct ListNode* head)
+{
+    struct ListNode *tmp = NULL;
+    while(head) {
+        tmp = head->next;
+        free(head);
+        head = tmp;
+    }
+}
+
 int main()
 {
     int array_1[] = {1, 2 ,4, 5, 7, 11, 18};
@@ -206,11 +212,11 @@ int main()
     dump_link_list(list1);
     dump_link_list(list2);
 
-    struct ListNode* result = merge_lists(list1, list2);
+    struct ListNode* result = merge_sorted_list(list1, list2);
     dump_link_list(result);
 
-    struct ListNode* reverseList1 = reverseList(list1);
-    dump_link_list(reverseList1);
+    struct ListNode* reverse_list1 = reverse_list(list1);
+    dump_link_list(reverse_list1);
 
     printf("original list3 \r\n");
     dump_link_list(list3);
@@ -218,5 +224,8 @@ int main()
     printf("list3 after sorting \r\n");
     dump_link_list(list3);
 
-    
+    destroy_link_list(list1);
+    destroy_link_list(list2);
+    destroy_link_list(list3);
+    destroy_link_list(result);
 }
