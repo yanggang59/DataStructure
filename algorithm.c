@@ -14,8 +14,6 @@ int dump_array(int* array, int size)
 
 void bubble_sort_array(int* array, int size)
 {
-
-    int pos;
     int tmp;
     int i, j;
 
@@ -98,7 +96,7 @@ int find_k_th_largest(int *array, int size, int k)
 /**
 * TOPK Problem
 */
-void test_find_k_th_largest()
+int test_find_k_th_largest()
 {
     int size = 20;
     int* array;
@@ -116,12 +114,73 @@ void test_find_k_th_largest()
     dump_array(array, size);
 
     free(array);
+
+    return 0;
+}
+
+static int max(int a, int b)
+{
+    return (a > b) ? a : b;
+}
+
+static int min(int a, int b)
+{
+    return (a < b) ? a : b;
+}
+
+static int brutal_force_trap(int* height, int size)
+{
+    int i, j;
+    int water = 0;
+
+    for(i = 1; i < size - 1; i++) {
+        int left_max = 0, right_max = 0;
+
+        for(j = 0; j < i; j++)
+            left_max = max(height[j], left_max);
+
+        for(j = i + 1; j < size; j++)
+            right_max = max(height[j], right_max);
+        
+        if (left_max == height[i] && right_max == height[i]) {
+            continue;
+        }
+        
+        water += min(left_max, right_max) - height[i];
+    }
+    return water;
+}
+
+int test_trap()
+{
+    int size = 20;
+    int* array;
+    int water = 0;
+
+    array = gen_random_array(size);
+    dump_array(array, size);
+
+    if (size < 3) {
+        printf("Not enough bars to trap water\r\n");
+        free(array);
+        return -1;
+    }
+    water = brutal_force_trap(array, size);
+    printf("Trapped water = %d \r\n", water);
+
+    free(array);
+
+    return 0;
 }
 
 
 int main()
 {
-    test_find_k_th_largest();
+    int ret;
 
-    return 0;
+    ret = test_find_k_th_largest();
+
+    ret = test_trap();
+
+    return ret;
 }
