@@ -1,19 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "array.h"
 
 
-
-int dump_array(int* array, int size)
-{
-    int i;
-    for(i = 0; i < size; i++) {
-        printf("%d ", array[i]);
-    }
-    printf("\r\n");
-}
-
-void bubble_sort_array(int* array, int size)
+static void bubble_sort_array(int* array, int size)
 {
     int tmp;
     int i, j;
@@ -64,7 +55,7 @@ void quick_sort(int* array, int size)
     }
 }
 
-int* reverse_array(int* array, int size)
+static int* reverse_array(int* array, int size)
 {
     int i;
     int tmp;
@@ -76,28 +67,7 @@ int* reverse_array(int* array, int size)
     return array;
 }
 
-int* create_array(int size, int step, int start)
-{
-    int i = 0;
-    int* array = malloc(size * sizeof(int));
-    for(i = 0; i < size; i++) {
-        array[i] = start + step * i + 1;
-    }
-    return array;
-}
-
-
-int* gen_random_array(int size)
-{
-    int i = 0;
-    int* array = malloc(size * sizeof(int));
-    for(i = 0; i < size; i++) {
-        array[i] = rand() % 100;
-    }
-    return array;
-}
-
-int* merge_sorted_arrays(int* arr0, int size0, int* arr1, int size1)
+static int* merge_sorted_arrays(int* arr0, int size0, int* arr1, int size1)
 {
     int pos0 = 0, pos1 = 0, pos = 0;
     int* result;

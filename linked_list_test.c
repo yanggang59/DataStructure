@@ -1,19 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "linked_list.h"
 
-struct linked_list {
-    int val;
-    struct linked_list *next;
- };
-
-static struct linked_list* create_node(int val)
-{
-    struct linked_list* tmp = (struct linked_list*)malloc(sizeof(struct linked_list));
-    tmp->val = val;
-    tmp->next = NULL;
-    return tmp;
-}
 
 struct linked_list* merge_sorted_list(struct linked_list* list1, struct linked_list* list2)
 {
@@ -31,26 +20,26 @@ struct linked_list* merge_sorted_list(struct linked_list* list1, struct linked_l
 
     while(list1 && list2) {
         if(list1->val < list2->val) {
-            tail = tail->next = create_node(list1->val);
+            tail = tail->next = create_linked_list_node(list1->val);
             list1 = list1->next;
         } else if (list1->val > list2->val) {
-            tail = tail->next = create_node(list2->val);
+            tail = tail->next = create_linked_list_node(list2->val);
             list2 = list2->next;
         } else {
-            tail = tail->next = create_node(list1->val);
-            //tail = tail->next = create_node(list2->val);
+            tail = tail->next = create_linked_list_node(list1->val);
+            //tail = tail->next = create_linked_list_node(list2->val);
             list1 = list1->next;
             list2 = list2->next;
         }
     }
 
     while(list1) {
-        tail = tail->next = create_node(list1->val);
+        tail = tail->next = create_linked_list_node(list1->val);
         list1 = list1->next;
     }
 
     while(list2) {
-        tail = tail->next = create_node(list2->val);
+        tail = tail->next = create_linked_list_node(list2->val);
         list2 = list2->next;
     }
 
@@ -114,7 +103,6 @@ struct linked_list* select_sort_list(struct linked_list* head)
 
 }
 
-
 struct linked_list* insert_sort_list(struct linked_list* head) 
 {
     //Insert Sort Algorithm
@@ -149,42 +137,6 @@ struct linked_list* insert_sort_list(struct linked_list* head)
 
     return dummy_head->next;
 
-}
-
-
-static void dump_linked_list(struct linked_list* list)
-{
-    while(list) {
-        printf("%d ", list->val);
-        list = list->next;
-    }
-    printf("\r\n");
-}
-
-static struct linked_list* create_linked_list(int* data, int size)
-{
-    int i;
-    struct linked_list* head = NULL, *tail = NULL;
-    for(i = 0; i < size; i++) {
-        struct linked_list* tmp = create_node(data[i]);
-        if (!head) {
-            head = tail = tmp;
-        } else {
-            tail->next = tmp;
-            tail = tmp;
-        }
-    }
-    return head;
-}
-
-static void destroy_linked_list(struct linked_list* head)
-{
-    struct linked_list *tmp = NULL;
-    while(head) {
-        tmp = head->next;
-        free(head);
-        head = tmp;
-    }
 }
 
 int main()

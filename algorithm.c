@@ -2,16 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-
-
-static int dump_array(int *array, int size)
-{
-    int i;
-    for(i = 0; i < size; i++) {
-        printf("%d ", array[i]);
-    }
-    printf("\r\n");
-}
+#include "array.h"
 
 static void bubble_sort_array(int *array, int size)
 {
@@ -31,38 +22,6 @@ static void bubble_sort_array(int *array, int size)
             }
         }
     }
-}
-
-static int *reverse_array(int *array, int size)
-{
-    int i;
-    int tmp;
-    for(i = 0; i < size / 2; i++) {
-        tmp = array[i];
-        array[i] = array[size - i - 1];
-        array[size - i - 1] = tmp;
-    }
-    return array;
-}
-
-static int *create_array(int size, int step, int start)
-{
-    int i = 0;
-    int *array = malloc(size * sizeof(int));
-    for(i = 0; i < size; i++) {
-        array[i] = start + step * i + 1;
-    }
-    return array;
-}
-
-static int *gen_random_array(int size)
-{
-    int i = 0;
-    int *array = malloc(size * sizeof(int));
-    for(i = 0; i < size; i++) {
-        array[i] = rand() % 100;
-    }
-    return array;
 }
 
 static int partition(int *array, int left, int right)
@@ -280,6 +239,39 @@ int test_find_longest_substring()
     return 0;
 }
 
+static int find_longest_increasing_subsequence(int *array, int size)
+{
+    return 0;
+}
+
+int test_longest_increasing_subsequence()
+{
+    int size = 20;
+    int *array;
+    int length = 0;
+
+    printf("********* test longest_increasing_subsequence start **********\r\n");
+    array = gen_random_array(size);
+    dump_array(array, size);
+
+    length = find_longest_increasing_subsequence(array, size);
+    printf("longest increasing subsequence length = %d\r\n", length);
+
+    printf("********* test longest_increasing_subsequence start **********\r\n\n\n");
+    return 0;
+}
+
+static struct linked_list *__test_odd_even_list(struct linked_list *head)
+{
+    return NULL;
+}
+
+int test_odd_even_list()
+{
+    struct linked_list *list = NULL;
+    return 0;
+}
+
 int main()
 {
     int ret;
@@ -297,6 +289,11 @@ int main()
     ret = test_find_longest_substring();
     if (ret) {
         printf("[Error] test find longest substring failed\r\n");
+    }
+
+    ret = test_longest_increasing_subsequence();
+    if (ret) {
+        printf("[Error] test find longest increasing subsequence failed\r\n");
     }
 
     return ret;
