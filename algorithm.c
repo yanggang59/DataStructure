@@ -96,12 +96,14 @@ int find_k_th_largest(int *array, int size, int k)
 /**
 * TOPK Problem
 */
-int test_find_k_th_largest()
+int test_topk()
 {
     int size = 20;
     int* array;
     int topk = 0;
     int k = 4;
+
+    printf("***************** test topk start *****************\r\n");
     
     array = gen_random_array(size);
     dump_array(array, size);
@@ -114,6 +116,8 @@ int test_find_k_th_largest()
     dump_array(array, size);
 
     free(array);
+
+    printf("***************** test topk end *****************\r\n\n\n");
 
     return 0;
 }
@@ -132,22 +136,47 @@ static int brutal_force_trap(int* height, int size)
 {
     int i, j;
     int water = 0;
+    int left_max = 0, right_max = 0;
 
     for(i = 1; i < size - 1; i++) {
-        int left_max = 0, right_max = 0;
-
-        for(j = 0; j < i; j++)
+        
+        // find the highest bar to the left, including height[i]
+        for(j = 0; j <= i; j++)
             left_max = max(height[j], left_max);
 
-        for(j = i + 1; j < size; j++)
+        // find the highest bar to the right, including height[i]
+        for(j = i ; j < size; j++)
             right_max = max(height[j], right_max);
-        
+
+        // left_max <= height[i] && right_max <= height[i]
+        // if height[i] is the highest, then this bar cannot hold water, continue
         if (left_max == height[i] && right_max == height[i]) {
             continue;
         }
-        
+
         water += min(left_max, right_max) - height[i];
     }
+    return water;
+}
+
+static int brutal_force_trap_optimize(int* height, int n)
+{
+    int i;
+    int water = 0;
+    int l_max[n];
+    int r_max[n];
+
+    l_max[0] = height[0];
+    r_max[n - 1] = height[n - 1];
+
+    for (i = 1; i < n; i++)
+        l_max[i] = max(l_max[i - 1], height[i]);
+
+    for (i = n - 2; i >= 0; i--)
+        r_max[i] = max(r_max[i + 1], height[i]);
+
+    for (i = 1; i < n - 1; i++)
+        water += (min(l_max[i - 1], r_max[i + 1]) > height[i]) ? (min(l_max[i - 1], r_max[i + 1]) - height[i]) : 0;
     return water;
 }
 
@@ -157,6 +186,7 @@ int test_trap()
     int* array;
     int water = 0;
 
+    printf("***************** test trap start *****************\r\n");
     array = gen_random_array(size);
     dump_array(array, size);
 
@@ -166,9 +196,13 @@ int test_trap()
         return -1;
     }
     water = brutal_force_trap(array, size);
-    printf("Trapped water = %d \r\n", water);
+    printf("brutal force trapped water = %d \r\n", water);
+
+    water = brutal_force_trap_optimize(array, size);
+    printf("brutal force optimize trapped water = %d \r\n", water);
 
     free(array);
+    printf("***************** test trap end  *****************\r\n\n\n");
 
     return 0;
 }
@@ -178,7 +212,7 @@ int main()
 {
     int ret;
 
-    ret = test_find_k_th_largest();
+    ret = test_topk();
 
     ret = test_trap();
 
