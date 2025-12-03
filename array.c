@@ -15,8 +15,6 @@ int dump_array(int* array, int size)
 
 void bubble_sort_array(int* array, int size)
 {
-
-    int pos;
     int tmp;
     int i, j;
 

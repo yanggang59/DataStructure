@@ -1,14 +1,11 @@
-SRC := binary_tree.c link_list.c
+SRCS := $(wildcard *.c)
+BINS := $(patsubst %.c,%,$(SRCS))
+CFLAGS := -g
 
-all:
-	gcc binary_tree.c -o binary_tree -g
-	gcc link_list.c -o link_list -g
-	gcc array.c -o array -g
-	gcc leet_code.c -o leet_code -g
-	gcc heap.c -o heap -g
+all: $(BINS)
+
+%: %.c
+	gcc $(CFLAGS) -o $@ $<
+
 clean:
-	rm -f binary_tree
-	rm -f link_list
-	rm -f array
-	rm -f leet_code
-	rm -f heap
+	rm -f $(BINS)
