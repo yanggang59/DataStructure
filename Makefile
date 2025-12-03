@@ -1,6 +1,7 @@
-SRCS := $(wildcard *.c)
+CUR_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+SRCS := $(wildcard ./*.c)
 BINS := $(patsubst %.c,%,$(SRCS))
-COMMON_DIR := ./common/
+COMMON_DIR := $(CUR_DIR)/common
 COMMON_SRCS := $(wildcard $(COMMON_DIR)/*.c)
 COMMON_OBJS := $(COMMON_SRCS:.c=.o)
 COMMON_LIB := $(COMMON_DIR)/libcommon.a

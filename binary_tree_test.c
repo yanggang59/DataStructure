@@ -52,7 +52,6 @@ Node* top(Stack* stack)
     return NULL;
 }
 
-
 typedef struct queue_node{
     Node* node;
     struct queue_node* next;
