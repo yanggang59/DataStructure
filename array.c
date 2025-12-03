@@ -56,6 +56,7 @@ static void __quick_sort(int* array, int left, int right)
         __quick_sort(array, left, pos - 1);
         __quick_sort(array, pos + 1, right);
     }
+    return;
 }
 
 void quick_sort(int* array, int size)

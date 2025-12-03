@@ -70,7 +70,7 @@ static int partition(int *array, int left, int right)
 {
     int pivot = array[left];
     while(right > left) {
-        while ((right > left) && array[right] >= pivot) right--;
+        while ((right > left) && array[right] > pivot) right--;
         array[left] = array[right];
         while ((right > left) && array[left] <= pivot) left++;
         array[right] = array[left]; 
@@ -103,13 +103,17 @@ void test_find_k_th_largest()
     int size = 20;
     int* array;
     int topk = 0;
+    int k = 4;
     
     array = gen_random_array(size);
     dump_array(array, size);
 
-    topk = find_k_th_largest(array, size, size - 4);
+    topk = find_k_th_largest(array, size, k);
 
     printf("Top %d largest = %d \r\n", 4, topk);
+
+    bubble_sort_array(array, size);
+    dump_array(array, size);
 
     free(array);
 }
