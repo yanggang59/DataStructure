@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 
 static int dump_array(int *array, int size)
@@ -240,16 +241,41 @@ int test_trap()
     return 0;
 }
 
-static char* find_longest_substring(char *str)
+/**
+* slinding window
+*/
+static int find_longest_substring_length(const char *str)
 {
-    return NULL;
+    unsigned long length, max_sub_str_len = 0;
+    int chars[256] = {0};
+    int left = 0, right = 0;
+
+    length = strlen(str);
+    while( right < length) {
+        if (chars[str[right]] == 0) {
+            chars[str[right]] = 1;
+            right++;
+            max_sub_str_len = (right - left) > max_sub_str_len ? (right - left) : max_sub_str_len;
+        } else {
+            chars[str[left]] = 0;
+            left++;
+        }
+    }
+    return max_sub_str_len;
 }
 
 int test_find_longest_substring()
 {
-    char *test_string = "aababcabcdabcdeaaaabcdefgabcccdfs";
+    int length;
+    const char *test_string = "aabcbcdabcdabcdeaaaabcdefgabcccdfs";
 
-    char *ret = find_longest_substring(test_string);
+    printf("*********** test longest substring length start ************\r\n");
+
+    length = find_longest_substring_length(test_string);
+
+    printf("longest substring length = %d\r\n", length);
+
+    printf("*********** test longest substring length done ************\r\n\n\n");
 
     return 0;
 }
