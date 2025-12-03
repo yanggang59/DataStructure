@@ -3,7 +3,7 @@
 #include <stdbool.h>
 
 
-int dump_array(int* array, int size)
+static int dump_array(int *array, int size)
 {
     int i;
     for(i = 0; i < size; i++) {
@@ -12,7 +12,7 @@ int dump_array(int* array, int size)
     printf("\r\n");
 }
 
-void bubble_sort_array(int* array, int size)
+static void bubble_sort_array(int *array, int size)
 {
     int tmp;
     int i, j;
@@ -32,7 +32,7 @@ void bubble_sort_array(int* array, int size)
     }
 }
 
-int* reverse_array(int* array, int size)
+static int *reverse_array(int *array, int size)
 {
     int i;
     int tmp;
@@ -44,20 +44,20 @@ int* reverse_array(int* array, int size)
     return array;
 }
 
-int* create_array(int size, int step, int start)
+static int *create_array(int size, int step, int start)
 {
     int i = 0;
-    int* array = malloc(size * sizeof(int));
+    int *array = malloc(size * sizeof(int));
     for(i = 0; i < size; i++) {
         array[i] = start + step * i + 1;
     }
     return array;
 }
 
-int* gen_random_array(int size)
+static int *gen_random_array(int size)
 {
     int i = 0;
-    int* array = malloc(size * sizeof(int));
+    int *array = malloc(size * sizeof(int));
     for(i = 0; i < size; i++) {
         array[i] = rand() % 100;
     }
@@ -77,21 +77,19 @@ static int partition(int *array, int left, int right)
     return left;
 }
 
-static int qselect(int* array, int left, int right, int target_idx)
+static int quick_select(int *array, int left, int right, int target_idx)
 {
     int idx = partition(array, left, right);
     if (idx == target_idx) return array[idx];
-    else if (idx < target_idx) return qselect(array, idx + 1, right, target_idx);
-    else return qselect(array, left, idx - 1, target_idx);
+    else if (idx < target_idx) return quick_select(array, idx + 1, right, target_idx);
+    else return quick_select(array, left, idx - 1, target_idx);
 }
-
 
 int find_k_th_largest(int *array, int size, int k)
 {
     if((size < 1) || (k > size)) return -1;
-    return qselect(array, 0, size - 1, size - k);
+    return quick_select(array, 0, size - 1, size - k);
 }
-
 
 /**
 * TOPK Problem
@@ -99,7 +97,7 @@ int find_k_th_largest(int *array, int size, int k)
 int test_topk()
 {
     int size = 20;
-    int* array;
+    int *array;
     int topk = 0;
     int k = 4;
 
@@ -116,7 +114,6 @@ int test_topk()
     dump_array(array, size);
 
     free(array);
-
     printf("***************** test topk end *****************\r\n\n\n");
 
     return 0;
@@ -132,34 +129,34 @@ static int min(int a, int b)
     return (a < b) ? a : b;
 }
 
-static int brutal_force_trap(int* height, int size)
+static int brutal_force_trap(int *height, int size)
 {
     int i, j;
     int water = 0;
-    int left_max = 0, right_max = 0;
+    int left_max, right_max;
 
     for(i = 1; i < size - 1; i++) {
+        left_max = right_max = 0;
         
-        // find the highest bar to the left, including height[i]
-        for(j = 0; j <= i; j++)
+        // find the highest bar to the left, not including height[i]
+        for(j = 0; j < i; j++)
             left_max = max(height[j], left_max);
 
-        // find the highest bar to the right, including height[i]
-        for(j = i ; j < size; j++)
+        // find the highest bar to the right, not including height[i]
+        for(j = i + 1 ; j < size; j++)
             right_max = max(height[j], right_max);
 
-        // left_max <= height[i] && right_max <= height[i]
         // if height[i] is the highest, then this bar cannot hold water, continue
-        if (left_max == height[i] && right_max == height[i]) {
+        if ((left_max < height[i]) || (right_max < height[i])) {
             continue;
         }
 
-        water += min(left_max, right_max) - height[i];
+        water += (min(left_max, right_max) - height[i]);
     }
     return water;
 }
 
-static int brutal_force_trap_optimize(int* height, int n)
+static int brutal_force_trap_optimize_1(int *height, int n)
 {
     int i;
     int water = 0;
@@ -169,9 +166,11 @@ static int brutal_force_trap_optimize(int* height, int n)
     l_max[0] = height[0];
     r_max[n - 1] = height[n - 1];
 
+    // find the left highest bar height
     for (i = 1; i < n; i++)
         l_max[i] = max(l_max[i - 1], height[i]);
 
+    // find the right highest bar height
     for (i = n - 2; i >= 0; i--)
         r_max[i] = max(r_max[i + 1], height[i]);
 
@@ -180,10 +179,36 @@ static int brutal_force_trap_optimize(int* height, int n)
     return water;
 }
 
+static int brutal_force_trap_optimize_2(int *height, int n)
+{
+    int i;
+    int left_max, right_max;
+    int left =0, right = n - 1;
+    int water = 0;
+
+    left_max = height[0];
+    right_max = height[n - 1];
+
+    while(left <= right) {
+        left_max = max(left_max, height[left]);
+        right_max = max(right_max, height[right]);
+
+        if (left_max < right_max) {
+            water += left_max - height[left];
+            left++;
+        } else {
+            water += right_max - height[right];
+            right--;
+        }
+    }
+
+    return water;
+}
+
 int test_trap()
 {
     int size = 20;
-    int* array;
+    int *array;
     int water = 0;
 
     printf("***************** test trap start *****************\r\n");
@@ -198,8 +223,11 @@ int test_trap()
     water = brutal_force_trap(array, size);
     printf("brutal force trapped water = %d \r\n", water);
 
-    water = brutal_force_trap_optimize(array, size);
-    printf("brutal force optimize trapped water = %d \r\n", water);
+    water = brutal_force_trap_optimize_1(array, size);
+    printf("brutal force optimize 1 trapped water = %d \r\n", water);
+
+    water = brutal_force_trap_optimize_2(array, size);
+    printf("brutal force optimize 2 trapped water = %d \r\n", water);
 
     free(array);
     printf("***************** test trap end  *****************\r\n\n\n");
