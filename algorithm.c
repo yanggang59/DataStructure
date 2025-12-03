@@ -102,6 +102,11 @@ int test_topk()
     int k = 4;
 
     printf("***************** test topk start *****************\r\n");
+
+    if ( k > size) {
+        printf("[Error] Invalid k : %d\r\n", k);
+        return -1;
+    }
     
     array = gen_random_array(size);
     dump_array(array, size);
@@ -235,14 +240,38 @@ int test_trap()
     return 0;
 }
 
+static char* find_longest_substring(char *str)
+{
+    return NULL;
+}
+
+int test_find_longest_substring()
+{
+    char *test_string = "aababcabcdabcdeaaaabcdefgabcccdfs";
+
+    char *ret = find_longest_substring(test_string);
+
+    return 0;
+}
 
 int main()
 {
     int ret;
 
     ret = test_topk();
+    if (ret) {
+        printf("[Error] test topk failed\r\n");
+    }
 
     ret = test_trap();
+    if (ret) {
+        printf("[Error] test trap failed\r\n");
+    }
+
+    ret = test_find_longest_substring();
+    if (ret) {
+        printf("[Error] test find longest substring failed\r\n");
+    }
 
     return ret;
 }
