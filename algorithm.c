@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "array.h"
+#include "linked_list.h"
 
 static void bubble_sort_array(int *array, int size)
 {
@@ -261,14 +262,38 @@ int test_longest_increasing_subsequence()
     return 0;
 }
 
-static struct linked_list *__test_odd_even_list(struct linked_list *head)
+static struct linked_list *handle_odd_even_list(struct linked_list *head)
 {
-    return NULL;
+    struct linked_list *odd, *even, *even_head;
+    /**
+    *  if (1) list is null
+    *     (2) list has only one element
+    *  just return list
+    */ 
+
+    if (!head || !head->next) return head;
+
+    odd = head;
+    even_head = even = head->next;
+    while(head) {
+        head = head->next;
+    }
+    return head;
 }
 
-int test_odd_even_list()
+static int test_odd_even_list()
 {
     struct linked_list *list = NULL;
+    int *array;
+    int size = 21;
+    
+    array = create_array(size, 1, 1);
+    list = create_linked_list(array, size);
+    dump_linked_list(list);
+
+    list = handle_odd_even_list(list);
+    dump_linked_list(list);
+
     return 0;
 }
 
@@ -294,6 +319,11 @@ int main()
     ret = test_longest_increasing_subsequence();
     if (ret) {
         printf("[Error] test find longest increasing subsequence failed\r\n");
+    }
+
+    ret = test_odd_even_list();
+    if (ret) {
+        printf("[Error] test_odd_even_list failed\r\n");
     }
 
     return ret;

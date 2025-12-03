@@ -13,6 +13,7 @@ struct linked_list* create_linked_list_node(int val)
 
 void dump_linked_list(struct linked_list* list)
 {
+    printf("[LIST] ");
     while(list) {
         printf("%d ", list->val);
         list = list->next;
