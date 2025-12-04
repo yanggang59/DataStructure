@@ -28,11 +28,11 @@ static void bubble_sort_array(int *array, int size)
 static int partition(int *array, int left, int right)
 {
     int pivot = array[left];
-    while(right > left) {
-        while ((right > left) && array[right] > pivot) right--;
+    while(left < right) {
+        while ((left < right) && array[right] > pivot) right--;
         array[left] = array[right];
-        while ((right > left) && array[left] <= pivot) left++;
-        array[right] = array[left]; 
+        while ((left < right) && array[left] <= pivot) left++;
+        array[right] = array[left];
     }
     array[left] = pivot;
     return left;
