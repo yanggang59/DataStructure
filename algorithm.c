@@ -264,7 +264,9 @@ int test_longest_increasing_subsequence()
 
 static struct linked_list *handle_odd_even_list(struct linked_list *head)
 {
-    struct linked_list *odd, *even, *even_head;
+    struct linked_list *odd = NULL, *even = NULL;
+    struct linked_list dummy_odd, dummy_even;
+    int i = 0;
     /**
     *  if (1) list is null
     *     (2) list has only one element
@@ -273,19 +275,40 @@ static struct linked_list *handle_odd_even_list(struct linked_list *head)
 
     if (!head || !head->next) return head;
 
-    odd = head;
-    even_head = even = head->next;
+    dummy_odd.next = head;
+    dummy_even.next = head->next;
+
     while(head) {
+        i++;
+        if ((i % 2) == 1) {
+            if(!odd) {
+                odd = head;
+            } else {
+                odd->next = head;
+                odd =head;
+            }
+        } else {
+            if (!even) {
+                even = head;
+            } else {
+                even->next = head;
+                even = head;
+            }
+        }
         head = head->next;
     }
-    return head;
+    odd->next = dummy_even.next;
+    even->next = NULL;
+    return dummy_odd.next;
 }
 
 static int test_odd_even_list()
 {
     struct linked_list *list = NULL;
     int *array;
-    int size = 21;
+    int size = 9;
+
+    printf("********* test_odd_even_list start **********\r\n");
     
     array = create_array(size, 1, 1);
     list = create_linked_list(array, size);
@@ -293,6 +316,12 @@ static int test_odd_even_list()
 
     list = handle_odd_even_list(list);
     dump_linked_list(list);
+
+    destroy_linked_list(list);
+    free(array);
+
+    printf("********* test_odd_even_list done **********\r\n");
+
 
     return 0;
 }
