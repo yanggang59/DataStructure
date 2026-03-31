@@ -171,35 +171,6 @@ static int brutal_force_trap_optimize_2(int *height, int n)
     return water;
 }
 
-int test_trap()
-{
-    int size = 20;
-    int *array;
-    int water = 0;
-
-    printf("***************** test trap start *****************\r\n");
-    array = gen_random_array(size);
-    dump_array(array, size);
-
-    if (size < 3) {
-        printf("Not enough bars to trap water\r\n");
-        free(array);
-        return -1;
-    }
-    water = brutal_force_trap(array, size);
-    printf("brutal force trapped water = %d \r\n", water);
-
-    water = brutal_force_trap_optimize_1(array, size);
-    printf("brutal force optimize 1 trapped water = %d \r\n", water);
-
-    water = brutal_force_trap_optimize_2(array, size);
-    printf("brutal force optimize 2 trapped water = %d \r\n", water);
-
-    free(array);
-    printf("***************** test trap end  *****************\r\n\n\n");
-
-    return 0;
-}
 
 /**
 * slinding window
@@ -240,9 +211,76 @@ int test_find_longest_substring()
     return 0;
 }
 
-static int find_longest_increasing_subsequence(int *array, int size)
+static int longest_increasing_subsequence(int *array, int size)
 {
-    return 0;
+    int i, j;
+    int dp[size];
+    int max_len = 1;
+
+    if (size <= 0) return 0;
+
+    for(i = 0; i < size; i++) {
+        dp[i] = 1;
+        for(j = 0; j < i; j++) {
+            if ((array[i] > array[j]) && (dp[j] + 1 > dp[i])) {
+                dp[i] = dp[j] + 1;
+            }
+        }
+        max_len = max(max_len, dp[i]);
+    }
+    return max_len;
+}
+
+int longest_increasing_subsequence_2(int arr[], int n) 
+{
+    int dp[n];
+    int lis = 0;
+    int i, j;
+
+    for (i = 0; i < n; i++) {
+        dp[i] = 1;
+    }
+
+    for (i = 1; i < n; i++) {
+        for (j = 0; j < i; j++) {
+            if (arr[j] < arr[i] && dp[j] + 1 > dp[i]) {
+                dp[i] = dp[j] + 1;
+            }
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        if (dp[i] > lis) {
+            lis = dp[i];
+        }
+    }
+    return lis;
+}
+
+int longest_increasing_subsequence_optimize(int arr[], int n) {
+    int tail[n];
+    int length = 0;
+
+    if (n == 0) {
+        return 0;
+    }
+
+    for (int i = 0; i < n; i++) {
+        int left = 0, right = length;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (tail[mid] < arr[i]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        tail[left] = arr[i];
+        if (left == length) {
+            length++;
+        }
+    }
+    return length;
 }
 
 int test_longest_increasing_subsequence()
@@ -255,7 +293,7 @@ int test_longest_increasing_subsequence()
     array = gen_random_array(size);
     dump_array(array, size);
 
-    length = find_longest_increasing_subsequence(array, size);
+    length = longest_increasing_subsequence(array, size);
     printf("longest increasing subsequence length = %d\r\n", length);
 
     printf("********* test longest_increasing_subsequence start **********\r\n\n\n");
@@ -322,6 +360,36 @@ static int test_odd_even_list()
 
     printf("********* test_odd_even_list done **********\r\n");
 
+
+    return 0;
+}
+
+int test_trap()
+{
+    int size = 20;
+    int *array;
+    int water = 0;
+
+    printf("***************** test trap start *****************\r\n");
+    array = gen_random_array(size);
+    dump_array(array, size);
+
+    if (size < 3) {
+        printf("Not enough bars to trap water\r\n");
+        free(array);
+        return -1;
+    }
+    water = brutal_force_trap(array, size);
+    printf("brutal force trapped water = %d \r\n", water);
+
+    water = brutal_force_trap_optimize_1(array, size);
+    printf("brutal force optimize 1 trapped water = %d \r\n", water);
+
+    water = brutal_force_trap_optimize_2(array, size);
+    printf("brutal force optimize 2 trapped water = %d \r\n", water);
+
+    free(array);
+    printf("***************** test trap end  *****************\r\n\n\n");
 
     return 0;
 }
