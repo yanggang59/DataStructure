@@ -1,6 +1,13 @@
-**/*.so
-**/*.a
-**/*.o
-**/*.json
-.*
+# 忽略所有文件
+*
+
+# 只跟踪以下类型的文件
+# 源代码文件
+!*.c
+!*.h
+
+# 项目配置文件
+!Makefile
+!README.md
+!readme.md
 !.gitignore
